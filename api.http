@@ -1,0 +1,29 @@
+###
+GET http://127.0.0.1:3333/memories
+
+
+###
+POST http://127.0.0.1:3333/memories
+Content-Type: application/json
+
+{
+  "content": "Teste de memória",
+  "coverUrl": "http://127.0.0.1:teste",
+  "isPublic": 1
+  
+}
+
+###
+PUT http://127.0.0.1:3333/memories/cad9ed68-8986-4a3c-8240-5eb9a3e08397
+Content-Type: application/json
+
+{
+  "content": "Update Memory Storage",
+  "coverUrl": "http://127.0.0.1:3333"
+}
+
+###
+DELETE http://127.0.0.1:3333/memories/44d38ee5-ebfb-47d0-8d67-3026306c4eba
+Content-Type: application/json
+
+
