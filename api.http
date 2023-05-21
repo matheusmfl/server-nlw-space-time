@@ -27,3 +27,10 @@ DELETE http://127.0.0.1:3333/memories/44d38ee5-ebfb-47d0-8d67-3026306c4eba
 Content-Type: application/json
 
 
+### Auth
+POST http://127.0.0.1:3333/register
+Content-Type: application/json
+
+{
+  "code":"316a2b531a08ee6e80da"
+}
