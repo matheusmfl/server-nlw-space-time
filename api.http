@@ -1,5 +1,6 @@
 ###
 GET http://127.0.0.1:3333/memories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTWF0aGV1cyBGb250ZWxlcyIsImF2YXRhclVybCI6Imh0dHBzOi8vYXZhdGFycy5naXRodWJ1c2VyY29udGVudC5jb20vdS85Mjk1NzA4Nj92PTQiLCJzdWIiOiJiMzQ5ZDE5ZC1lYzgzLTQ1MGYtYWNiZC1iM2JjMDgyYWY2YTYiLCJpYXQiOjE2ODQ3MTQ4NjksImV4cCI6MTY4NzMwNjg2OX0.4vBICEVaDREV3kgb3Z_MfPEPRNVKSd-4xC_kQnaZW38
 
 
 ###
@@ -32,5 +33,5 @@ POST http://127.0.0.1:3333/register
 Content-Type: application/json
 
 {
-  "code":"316a2b531a08ee6e80da"
+  "code":"dd3be8ce631e2048d75f"
 }

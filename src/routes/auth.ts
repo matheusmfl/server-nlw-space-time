@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import axios from 'axios'
 import { z } from 'zod'
+import { prisma } from '../lib/prisma'
 
 export async function authRoutes(app: FastifyInstance) {
   app.post('/register', async (request, reply) => {
@@ -43,16 +44,51 @@ export async function authRoutes(app: FastifyInstance) {
     // como o userResponse é uma Promise, preciso capturar os dados do usuário
 
     const userSchema = z.object({
-      id: z.string(),
+      id: z.number(),
       login: z.string(),
       avatar_url: z.string().url(),
       name: z.string(),
     })
 
-    const user = userSchema.parse(userReponse.data)
+    const userInfo = userSchema.parse(userReponse.data)
 
+    // nesse passo veremos se já existe um user criado, usaremos o ID do github para
+    // verificar se o usuário já existe no banco de dados.
+
+    let user = await prisma.user.findUnique({
+      where: { githubId: userInfo.id },
+    })
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          githubId: userInfo.id,
+          login: userInfo.login,
+          avatarUrl: userInfo.avatar_url,
+          name: userInfo.name,
+        },
+      })
+    }
+
+    // Aqui geramos o token.
+    // Primeiro objeto de configuração é quais informações do usuário queremos colocar no token ( infos públicas )
+    // o segundo objeto de configuração é onde passamos o Sub, basicamente qual usuário percente esse Token, tipo o ID
+    // ainda no segundo colocamos o tempo de expiração do token
+    const token = app.jwt.sign(
+      {
+        name: user.name,
+        avatarUrl: user.avatarUrl,
+      },
+      {
+        sub: user.id,
+        expiresIn: '30 days',
+      },
+    )
+    console.log(token)
+
+    // o retorno dessa rota deve ser o token gerado pelo JWT
     return {
-      user,
+      token,
     }
   })
 }

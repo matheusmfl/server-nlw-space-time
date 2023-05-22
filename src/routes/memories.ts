@@ -4,8 +4,24 @@ import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 
 export async function memoriesRoutes(app: FastifyInstance) {
+  // Aqui no escopo geral irei passar um hook que executará uma função
+  // antes de todas as chamadas. 
+  app.addHook('preHandler', async (req) => {
+    await req.jwtVerify()
+  })
+
   app.get('/memories', async (req, res) => {
+    // O JWT registrado no Fastify faz com que consigamos verificar
+    // se essa requisição está sendo enviada o TOKEN
+    // O FRONTEND envia o token via Headers, na camada authorization passando o Bearer Token
+    // await req.jwtVerify()
+
+
+
     const memories = await prisma.memory.findMany({
+      where: {
+        userId: req.user.sub
+      },
       orderBy: {
         createdAt: 'asc',
       },
