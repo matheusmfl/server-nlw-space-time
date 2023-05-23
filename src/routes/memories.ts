@@ -17,7 +17,6 @@ export async function memoriesRoutes(app: FastifyInstance) {
     // await req.jwtVerify()
 
 
-
     const memories = await prisma.memory.findMany({
       where: {
         userId: req.user.sub
