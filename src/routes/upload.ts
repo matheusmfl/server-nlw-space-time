@@ -1,4 +1,13 @@
+import { randomUUID } from 'node:crypto'
+import { extname, resolve } from 'node:path'
 import { FastifyInstance } from 'fastify'
+import { createWriteStream } from 'node:fs'
+import { pipeline } from 'node:stream'
+import { promisify } from 'node:util'
+
+// pipeline permite aguardar uma stream, o processo de upload finalizar.
+// no Node não usa Promise por padrão, o promisify transforma o pipeline numa Promise
+const pump = promisify(pipeline)
 
 export async function uploadRoutes(app: FastifyInstance) {
   app.post('/upload', async (req, res) => {
@@ -24,5 +33,26 @@ export async function uploadRoutes(app: FastifyInstance) {
         message: 'Invalid file type',
       })
     }
+
+    const fileId = randomUUID()
+    // pegando o tipo do arquivo ou a extensão
+    const extension = extname(upload.filename)
+
+    const filename = fileId + extension
+
+    const writeSteam = createWriteStream(
+      resolve(__dirname, '../../uploads', filename), // resolve resolve o caminho independente do sistema operacional
+    )
+
+    // persistindo o arquivo no sistema
+    // pump vem do PIPELINE do node, leia a documentação do fastify-multipart
+    await pump(upload.file, writeSteam)
+
+    // agora eu preciso de uma URL para esse arquivo de imagem.
+
+    const fullURL = req.protocol.concat('://').concat(req.hostname)
+    const fileURL = new URL(`/uploads/${filename}`, fullURL).toString()
+
+    return { fileURL }
   })
 }

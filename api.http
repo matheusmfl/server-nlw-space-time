@@ -35,3 +35,9 @@ Content-Type: application/json
 {
   "code":"dd3be8ce631e2048d75f"
 }
+
+
+POST http://127.0.0.1:3333/upload
+Content-Type: image/jpeg
+
+@/caminho/para/sua/imagem.jpg
